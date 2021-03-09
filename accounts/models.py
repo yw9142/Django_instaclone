@@ -41,3 +41,50 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.nickname
+
+    follow_set = models.ManyToManyField('self',  # 자신을 참조
+                                        blank=True,  # 아무도 팔로우를 안한 상태
+                                        through='Follow',  # 중간 모델
+                                        symmetrical=False, )  # 비대칭 관게
+
+    # 해당 유저를 팔로우하고 있는 유저를 가져오는 속성
+    @property
+    def get_follower(self):
+        return [i.from_user for i in self.follower_user.all()]
+
+    # 해당 유저가 팔로우 하고 있는 유저를 가져오는 속성
+    @property
+    def get_following(self):
+        return [i.to_user for i in self.follow_user.all()]
+
+    # 팔로워 수 가져오는 속성
+    @property
+    def follower_count(self):
+        return len(self.get_follower)
+
+    # 팔로잉 수 가져오는 속성
+    @property
+    def following_count(self):
+        return len(self.get_following)
+
+    # 어떤 유저가 해당 유저의 팔로워인지 확인하는 속성
+    def is_follower(self, user):
+        return user in self.get_follower
+
+    # 어떤 유저가 해당 유저의 팔로잉인지 확인하는 속성
+    def is_following(self, user):
+        return user in self.get_following
+
+
+class Follow(models.Model):
+    from_user = models.ForeignKey(Profile, related_name='follow_user', on_delete=models.CASCADE)
+    to_user = models.ForeignKey(Profile, related_name='follower_user', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)  # 관계가 언제 생겼는지 작성
+
+    def __str__(self):  # 인스턴스 추적 양식 지정
+        return f"{self.from_user} -> {self.to_user}"
+
+    class Meta:
+        unique_together = (
+            ('from_user', 'to_user')  # 유니크한 관계 생성
+        )
