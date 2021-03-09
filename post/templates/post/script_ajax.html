@@ -178,7 +178,7 @@
                 let page = document.querySelector('#page').value;
                 console.log(page);
                 let end_page =
-                {{ post.paginator.num_pages }} // 해당 내용은 views.py에서 작성
+                {{ posts.paginator.num_pages }} // 해당 내용은 views.py에서 작성
 
                 if (page > end_page) {
                     return;
@@ -213,8 +213,10 @@
             });
         }
 
+        // 새로 받은 post_list html을 post 뒤에다가 계속 누적해서 붙이는 함수
         function addMorePostAjax(data, textStatus, jqXHR) {
-            let post;
+            let post = document.querySelector('#post_list_ajax');
+            post.insertAdjacentHTML('beforeend', data);
         }
 
         // 뷰의 크기가 변할 때 resizefunc 함수 실행

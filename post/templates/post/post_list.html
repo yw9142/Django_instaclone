@@ -1,5 +1,6 @@
 {% extends "post/layout.html" %}
 {% load static %}
+{% load post_extras %}
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
@@ -44,11 +45,9 @@
                             <div class="user_container">
                                 <div class="profile_img">
                                     {% if post.author.profile.picture %}
-                                        <img src="
-{{ post.author.profile.picture.url }}" alt="프로필이미지">
+                                        <img src="{{ post.author.profile.picture.url }}" alt="프로필이미지">
                                     {% else %}
-                                        <img src="{% static 'imgs/thumb.jpeg' %}"
-                                             alt="프로필 이미지">
+                                        <img src="{% static 'imgs/thumb.jpeg' %}" alt="프로필 이미지">
                                     {% endif %}
                                 </div>
                                 <div class="user_name">
@@ -113,9 +112,11 @@
                                              data-name="heartbeat"></div>
                                     {% endif %}
                                 </div>
-                                <div class="sprite_bubble_icon"></div>
-                                <div class="sprite_share_icon"
-                                     data-name="share"></div>
+                                <a href="{% url 'post:post_detail' post.pk %}">
+                                    <div class="sprite_bubble_icon"></div>
+                                </a>
+{#                                <div class="sprite_share_icon"#}
+{#                                     data-name="share"></div>#}
                             </div>
                             <div class="right_icon">
                                 {% if user in post.bookmark_user_set.all %}
@@ -123,18 +124,18 @@
                                          name="{{ post.id }}"
                                          data-name="bookmark"></div>
                                 {% else %}
-                                    <div class="sprite_bookmark_outline" name="
-{{ post.id }}" data-name="bookmark"></div>
+                                    <div class="sprite_bookmark_outline" name="{{ post.id }}" data-name="bookmark"></div>
                                 {% endif %}
                             </div>
                         </div>
 
                         <div class="likes m_text">
-                            <span id="like-count-{{ post.id }}">좋아요
-                                {{ post.like_count }}개</span>
-                            <span id="bookmark-count-{{ post.id }}">북마크
-                                {{ post.bookmark_count }}개</span>
+                            <span id="like-count-{{ post.id }}">좋아요{{ post.like_count }}개</span>
+                            <span id="bookmark-count-{{ post.id }}">북마크{{ post.bookmark_count }}개</span>
                         </div>
+
+                        <!-- safe / linebreaksbr -->
+                        <div class="content">{{ post|add_link|safe|linebreaksbr }}</div>
 
                         <div class="comment_container">
                             <div class="comment"

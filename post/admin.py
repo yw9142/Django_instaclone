@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 from django import forms
 from django.contrib import admin
-from .models import Post, Like, Bookmark, Comment
+from .models import Post, Like, Bookmark, Comment, Tag
 
 
 class PostForm(forms.ModelForm):
@@ -47,3 +47,8 @@ class BookmarkAdmin(admin.ModelAdmin):
 class CommentAdmin(admin.ModelAdmin):
     list_display = ['post', 'content', 'author', 'created_at']
     list_display_links = ['post', 'content', 'author']
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ['name']

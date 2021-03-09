@@ -20,11 +20,11 @@ from django.conf.urls.static import static
 from django.shortcuts import redirect
 
 urlpatterns = [
-    path('admin', admin.site.urls),
-    path('accounts', include('accounts.urls')),  # accounts app url 연결
-    path('accounts', include('allauth.urls')),
+    path('admin/', admin.site.urls),
+    path('accounts/', include('accounts.urls')),  # accounts app url 연결
+    path('accounts/', include('allauth.urls')),
 
-    path('post', include('post.urls', namespace='post')),  # post app url 연결
+    path('post/', include('post.urls', namespace='post')),  # post app url 연결
     # 루트 URL로 접근할 때 post로 연결
     path('', lambda r: redirect('post:post_list'), name='root'),
 ]
